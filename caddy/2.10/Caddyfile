@@ -2,12 +2,8 @@
     root * /usr/share/caddy
     file_server
 
-    # Server IP endpoint - only available when accessing via IP address
-    @ip_address header_regexp Host ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(:.*)?$
-    handle @ip_address {
-        handle_path /api/server-ip {
-            respond `{"ip":"{http.request.host}"}` 200
-            header Content-Type application/json
-        }
+    handle_path /api/server-ip {
+        respond `{"ip":"{http.request.host}"}` 200
+        header Content-Type application/json
     }
 }
