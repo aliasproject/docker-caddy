@@ -1,8 +1,8 @@
 // Static tasks configuration.
 [
   {
-    "label": "Build caddy:2.9-alpine",
-    "command": "docker buildx build --platform linux/arm64/v8,linux/amd64 --push -t ghcr.io/aliasproject/caddy:2.9-alpine -f caddy/2.9/Dockerfile caddy/2.9",
+    "label": "Build caddy:2.10-alpine",
+    "command": "docker buildx build --platform linux/arm64/v8,linux/amd64 --push -t ghcr.io/aliasproject/caddy:2.10-alpine -t ghcr.io/aliasproject/caddy:latest -f caddy/2.10/Dockerfile caddy/2.10",
     "use_new_terminal": true,
     "allow_concurrent_runs": false,
     "reveal": "always",
