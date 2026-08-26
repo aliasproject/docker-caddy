@@ -1,6 +1,6 @@
 # Docker Caddy Proxy
 
-A custom Caddy Docker image with a default HTML page for proxy deployments.
+-A custom Caddy Docker image with a default HTML page for proxy deployments.
 
 ## 🚀 Features
 
