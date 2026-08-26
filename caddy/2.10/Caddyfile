@@ -1,5 +1,7 @@
-:80 {
-    root * /usr/share/caddy
+:{$PORT:80} {
+    encode zstd gzip
+
+    root * {$SERVER_ROOT:/usr/share/caddy}
     file_server
 
     handle_path /api/server-ip {

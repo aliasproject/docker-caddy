@@ -32,7 +32,7 @@ Visit `http://localhost` to see your custom landing page.
 Edit `caddy/2.10/Caddyfile` to add your proxy configurations:
 
 ```caddyfile
-:80 {
+:{$PORT:80} {
     root * /usr/share/caddy
     file_server
 }
@@ -46,6 +46,38 @@ api.example.com {
     reverse_proxy api-server:3000
 }
 ```
+
+The default site block binds `$PORT` (falling back to `80`) rather than a
+hardcoded port, so the same image works both behind a platform that injects
+`$PORT` and in a plain `docker run -p 80:80`.
+
+## 🌐 Deploying a Static Site
+
+This image is built the same way `docker-php`'s frankenphp base is: a
+hardened, parametrized base that a per-site repo builds `FROM`, rather than
+something you configure in place. A static site's own Dockerfile mirrors how
+a PHP app (e.g. Alios) builds `FROM ghcr.io/aliasproject/php:8.4-frankenphp`:
+
+```dockerfile
+FROM ghcr.io/aliasproject/caddy:2.10-alpine
+
+# Add the static site content
+COPY . /usr/share/caddy/
+```
+
+The base image already provides:
+
+- **`$PORT`-driven binding** — the Caddyfile listens on `:{$PORT:80}`, so it
+  works unmodified behind PaaS platforms that inject `$PORT` (Coolify, etc.)
+- **Non-root runtime** — runs as `appuser` (group `0`), not root
+- **Compression** — `zstd`/`gzip` are enabled by default (the stock
+  `caddy:2.10-alpine` build has no `br`/Brotli module compiled in)
+- **A healthcheck** against Caddy's admin API
+
+If the site needs its own routes (an API health-check endpoint, custom
+headers, SPA fallback routing, etc.), also `COPY` a replacement `Caddyfile`
+the way the base image's own `Caddyfile` is structured, keeping the
+`:{$PORT:80}` address line.
 
 ### Customizing the Landing Page
 
